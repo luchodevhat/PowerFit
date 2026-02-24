@@ -1,14 +1,16 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>proyecto</title>
-    <link rel="stylesheet" href="/src/style.css">
-  </head>
-  <body>
-    <div class="page-center">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>proyecto</title>
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+
+<body>
+  <div class="page-center">
 
     <!-- Navbar (black) -->
     <nav class="navbar navbar--black">
@@ -23,20 +25,20 @@
         <li><a href="#features">Features</a></li>
         <li><a href="#pricing">Pricing</a></li>
         <li><a href="#about">About</a></li>
-        <li><a href="#contact">Log in</a></li>
+        <li><a href="login.html">Log in</a></li>
       </ul>
     </nav>
 
     <main class="main-content">
       <h1>Bienvenido a mi pagina</h1>
       <p>Contenido de la pagina.</p>
-    
-    
+
+
       <!-- categorias section -->
-    
-      <section class="perfumes-section" aria-labelledby="categorias-heading">  <!-- cambiar class de css-->
+
+      <section class="perfumes-section" aria-labelledby="categorias-heading"> <!-- cambiar class de css-->
         <h2 class="section-title" id="categorias-heading">Categorías</h2>
-    
+
         <div class="perfume-container">
           <article class="perfume-card">
             <img src="" alt="">
@@ -64,13 +66,13 @@
       <h1>Mas informacion</h1>
       <p>Contenido de la pagina.</p>
 
-  
+
 
       <!-- Ropa section -->
-      
+
       <section class="perfumes-section" aria-labelledby="categorias-heading">
         <h2 class="section-title" id="categorias-heading">Ropa</h2>
-      
+
         <div class="perfume-container">
           <article class="perfume-card">
             <img src="" alt="">
@@ -94,21 +96,28 @@
           </article>
         </div>
       </section>
+
+
+      <section class="hero-banner">
+        <h1>Mejores precios</h1>
+      </section>
+      <p>Contenido de la pagina.</p>
     </main>
 
-    </div>
-
-    
+  </div>
 
 
-    <footer class="footer"></footer>
 
-    <script type="module" src="/src/main.js"></script>
-    <script>
-      document.getElementById('navToggle2').addEventListener('click', () => {
-        document.getElementById('navMenu2').classList.toggle('active');
-        document.getElementById('navToggle2').classList.toggle('active');
-      });
-    </script>
-  </body>
+
+  <footer class="footer"></footer>
+
+  <script type="module" src="/src/main.js"></script>
+  <script>
+    document.getElementById('navToggle2').addEventListener('click', () => {
+      document.getElementById('navMenu2').classList.toggle('active');
+      document.getElementById('navToggle2').classList.toggle('active');
+    });
+  </script>
+</body>
+
 </html>

@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iniciar sesión | PowerFit</title>
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <div class="page-center">
+    <nav class="navbar navbar--black">
+      <a href="index.html" class="nav-brand">PowerFit</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="Pricing.html">Pricing</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="login.html">Log in</a></li>
+      </ul>
+    </nav>
+
+    <main class="auth-container">
+      <div class="auth-card">
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login" aria-selected="true">Iniciar sesión</button>
+          <button class="auth-tab" data-tab="signup" aria-selected="false">Crear cuenta</button>
+        </div>
+
+        <!-- Login form -->
+        <form id="loginForm" class="auth-form active" novalidate>
+          <h1>Bienvenido</h1>
+          <p class="auth-subtitle">Ingresa con tu cuenta</p>
+          <div class="form-group">
+            <label for="loginEmail">Correo electrónico</label>
+            <input type="email" id="loginEmail" name="email" required placeholder="tu@email.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Contraseña</label>
+            <input type="password" id="loginPassword" name="password" required placeholder="••••••••" autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn-auth">Iniciar sesión</button>
+        </form>
+
+        <!-- Signup form -->
+        <form id="signupForm" class="auth-form" novalidate>
+          <h1>Crear cuenta</h1>
+          <p class="auth-subtitle">Regístrate en PowerFit</p>
+          <div class="form-group">
+            <label for="signupName">Nombre</label>
+            <input type="text" id="signupName" name="name" required placeholder="Tu nombre" autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label for="signupEmail">Correo electrónico</label>
+            <input type="email" id="signupEmail" name="email" required placeholder="tu@email.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="signupPassword">Contraseña</label>
+            <input type="password" id="signupPassword" name="password" required placeholder="Mínimo 6 caracteres" autocomplete="new-password" minlength="6">
+          </div>
+          <div class="form-group">
+            <label for="signupPasswordConfirm">Confirmar contraseña</label>
+            <input type="password" id="signupPasswordConfirm" name="passwordConfirm" required placeholder="Repite la contraseña" autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn-auth">Crear cuenta</button>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer"></footer>
+
+  <script type="module" src="/src/main.js"></script>
+  <script>
+    // Mobile nav toggle
+    const navToggle = document.getElementById('navToggle');
+    const navMenu = document.getElementById('navMenu');
+    if (navToggle) {
+      navToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+        navToggle.classList.toggle('active');
+      });
+    }
+
+    // Tab switching
+    const tabs = document.querySelectorAll('.auth-tab');
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.tab;
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        tabs.forEach(t => {
+          if (t !== tab) t.setAttribute('aria-selected', 'false');
+        });
+
+        if (target === 'login') {
+          loginForm.classList.add('active');
+          signupForm.classList.remove('active');
+        } else {
+          signupForm.classList.add('active');
+          loginForm.classList.remove('active');
+        }
+      });
+    });
+
+    // Form handling
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Inicio de sesión (conectar con backend)');
+    });
+
+    document.getElementById('signupForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const password = document.getElementById('signupPassword').value;
+      const confirm = document.getElementById('signupPasswordConfirm').value;
+      if (password !== confirm) {
+        alert('Las contraseñas no coinciden');
+        return;
+      }
+      alert('Cuenta creada (conectar con backend)');
+    });
+  </script>
+</body>
+</html>
