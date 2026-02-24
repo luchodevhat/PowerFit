@@ -30,3 +30,15 @@
     <main class="main-content">
       <h1>Bienvenido a mi pagina</h1>
       <p>Contenido de la pagina.</p>
+    </main>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+    <script>
+      document.getElementById('navToggle2').addEventListener('click', () => {
+        document.getElementById('navMenu2').classList.toggle('active');
+        document.getElementById('navToggle2').classList.toggle('active');
+      });
+    </script>
+  </body>
+</html>
