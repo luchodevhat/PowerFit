@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>proyecto</title>
+    <link rel="stylesheet" href="/src/style.css">
+</head>
+
+<body>
+    <div class="page-center">
+
+        <!-- Navbar (black) -->
+        <nav class="navbar navbar--black">
+            <a href="#" class="nav-brand">PowerFit</a>
+            <button class="nav-toggle" id="navToggle2" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu2">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="Store.html">Store</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="login.html">Log in</a></li>
+            </ul>
+        </nav>
+
+        <section class="about-section">
+            <img src="/assets/img/about.png" alt="about">
+        </section>
+
+        <!-- Contact Section -->
+        <main class="main-content">    
+
+            <h1>Quienes somos</h1>
+            <p>descripcion de la empresa.</p>
+            <p>descripcion de la empresa.</p>
+
+            <section class="contact-section productos reveal" aria-labelledby="contacto-heading">
+                <div class="contact-container">
+
+                    <div class="contact-info">
+                        <h2 id="contacto-heading">Contáctanos</h2>
+                        <p>¿Tienes preguntas o deseas una recomendación personalizada? Escríbenos y te ayudamos a
+                            encontrar tu fragancia ideal.</p>
+
+                        <address class="contact-details">
+                            <p><strong>Teléfono:</strong> <a href="tel:+50670394886">+506 8619 5690</a></p>
+                            <p><strong>Ubicación:</strong> Heredia, Costa Rica</p>
+                        </address>
+                    </div>
+
+                    <form class="contact-form" id="whatsappForm" aria-label="Formulario de contacto">
+                        <div class="input-group">
+                            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder=" " />
+                            <label for="nombre">Nombre</label>
+                        </div>
+
+                        <div class="input-group">
+                            <textarea id="mensaje" name="mensaje" required placeholder=" "></textarea>
+                            <label for="mensaje">Mensaje</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Enviar por WhatsApp</button>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <footer class="footer"></footer>
+
+    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/whatsapp.js"></script>
+    <script>
+        document.getElementById('navToggle2').addEventListener('click', () => {
+            document.getElementById('navMenu2').classList.toggle('active');
+            document.getElementById('navToggle2').classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>

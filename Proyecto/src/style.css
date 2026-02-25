@@ -476,3 +476,176 @@ button:focus-visible {
 .btn-auth:active {
   transform: scale(0.98);
 }
+
+/* Contact section */
+.contact-section {
+  width: 100%;
+  max-width: 700px;
+  margin: 3rem 0;
+  padding: 2.5rem;
+  background: var(--nav-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--nav-border);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.contact-container {
+  display: grid;
+  gap: 2rem;
+  text-align: left;
+}
+
+@media (min-width: 600px) {
+  .contact-container {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+.contact-info h2 {
+  font-size: 1.5rem;
+  margin: 0 0 0.75rem;
+  color: inherit;
+}
+
+.contact-info > p {
+  margin: 0 0 1rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+}
+
+.contact-details {
+  font-style: normal;
+  margin: 0;
+}
+
+.contact-details p {
+  margin: 0.5rem 0;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.contact-details a {
+  color: var(--nav-accent);
+  text-decoration: none;
+}
+
+.contact-details a:hover {
+  color: var(--nav-accent-hover);
+  text-decoration: underline;
+}
+
+/* Contact form (whatsappForm) */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.contact-form .input-group {
+  position: relative;
+}
+
+.contact-form .input-group input,
+.contact-form .input-group textarea {
+  width: 100%;
+  padding: 1rem 1rem 0.5rem;
+  border: 1px solid var(--nav-border);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.25);
+  color: inherit;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 44px;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.contact-form .input-group textarea {
+  min-height: 100px;
+  padding-top: 1.25rem;
+}
+
+.contact-form .input-group input::placeholder,
+.contact-form .input-group textarea::placeholder {
+  color: transparent;
+}
+
+.contact-form .input-group input:focus,
+.contact-form .input-group textarea:focus {
+  outline: none;
+  border-color: var(--nav-accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.contact-form .input-group label {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1rem;
+  pointer-events: none;
+  transition: transform 0.2s, font-size 0.2s, color 0.2s;
+}
+
+.contact-form .input-group textarea + label {
+  top: 1.25rem;
+}
+
+.contact-form .input-group input:focus + label,
+.contact-form .input-group input:not(:placeholder-shown) + label,
+.contact-form .input-group textarea:focus + label,
+.contact-form .input-group textarea:not(:placeholder-shown) + label {
+  transform: translateY(-0.6rem);
+  font-size: 0.75rem;
+  color: var(--nav-accent);
+}
+
+.contact-form .btn-primary {
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  background: #25d366;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+}
+
+.contact-form .btn-primary:hover {
+  background: #20bd5a;
+}
+
+.contact-form .btn-primary:active {
+  transform: scale(0.98);
+}
+
+.about-section {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  overflow: hidden;
+}
+
+.about-section img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+  display: block;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-section img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.4);
+}
