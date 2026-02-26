@@ -88,6 +88,10 @@ Node.js
 
 Express.js 
 
+🗂 Database
+
+SQL (Managed with SQL Developer)
+
 🗂 Project Structure
 
 sportswear-store/
@@ -130,14 +134,5 @@ Deployment
 👨‍💻 Author
 
 Alejandro Alfaro
--
--
-Systems Engineering Student
+Systems Engineering
 Full-Stack Developer
-
-
-
-
-Database
-
-SQL (Managed with SQL Developer)
