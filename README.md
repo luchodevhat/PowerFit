@@ -1,4 +1,4 @@
-PowerFit Store Web Application
+PowerFit Store Web Application | THIS PROJECT IS STILL ON DEVELOPMENT
 
 A full-stack web application for a sportswear store that allows users to browse products, create accounts, log in as customers or administrators, and place orders through WhatsApp integration.
 
