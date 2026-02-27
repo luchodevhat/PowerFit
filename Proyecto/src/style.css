@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #000000;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -156,7 +156,7 @@
 
 /* Hero banner with Gym background */
 .hero-banner {
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../assets/img/Gym.jpg') center / cover no-repeat;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../public/img/Gym.jpg') center / cover no-repeat;
   padding: 4rem 2rem;
   border-radius: 12px;
   margin: 2rem 0;
@@ -314,6 +314,7 @@ button:focus-visible {
 .perfume-card h3 {
   font-size: 20px; 
   margin: 15px 0 10px;
+  color: black;
 }
 
 .perfume-card .price {
@@ -481,7 +482,7 @@ button:focus-visible {
 .contact-section {
   width: 100%;
   max-width: 700px;
-  margin: 3rem 0;
+  margin: 3rem auto;
   padding: 2.5rem;
   background: var(--nav-bg);
   backdrop-filter: blur(12px);
@@ -626,6 +627,58 @@ button:focus-visible {
   transform: scale(0.98);
 }
 
+.footer {
+  width: 100%;
+  margin-top: 3rem;
+  padding: 2.5rem 1.5rem 2rem;
+  background: #0b0b0b;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.footer-content {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-brand h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+}
+
+.footer-brand p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer-links a:hover {
+  color: #ffffff;
+}
+
+.footer-copy {
+  margin: 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
 .about-section {
   width: 100%;
   max-width: 900px;
@@ -648,4 +701,83 @@ button:focus-visible {
 .about-section img:hover {
   transform: scale(1.02);
   box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.4);
+}
+
+/* Video */
+.hero-video-section {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  height: 70vh;
+  min-height: 420px;
+  margin: 0 auto 3rem;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.hero-bg-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  z-index: 1;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.6));
+  z-index: 2;
+}
+
+
+
+/* Contenido */
+.hero-content {
+  position: relative;
+  z-index: 3;
+  color: white;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Mobile */
+@media (max-width: 100px) {
+  .hero-video-section {
+      height: 60vh;
+  }
+}
+
+@media (max-width: 100px) {
+  .hero-bg-video {
+      object-fit: none;
+  }
+}
+
+.hero-content h1,
+.hero-content p,
+.hero-content .btn {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 1s ease forwards;
+}
+
+.hero-content p {
+  animation-delay: 0.3s;
+}
+
+.hero-content .btn {
+  animation-delay: 0.6s;
+}
+
+@keyframes fadeUp {
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
 }
