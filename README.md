@@ -92,28 +92,6 @@ Express.js
 
 SQL (Managed with SQL Developer)
 
-🗂 Project Structure
-
-sportswear-store/
-│
-├── frontend/
-│   ├── index.html
-│   ├── store.html
-│   ├── about.html
-│   ├── login.html
-│   ├── css/
-│   └── js/
-│
-├── backend/
-│   ├── server.js
-│   ├── routes/
-│   ├── controllers/
-│   ├── models/
-│
-├── database/
-│   └── schema.sql
-│
-└── README.md
 
 📈 Future Improvements
 
