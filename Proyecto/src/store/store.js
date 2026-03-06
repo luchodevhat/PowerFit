@@ -27,7 +27,7 @@ function renderProducts() {
     let visibleCount = 0;
 
     allProducts.forEach(product => {
-        // Los campos de OracleDB vienen en MAYÚSCULAS
+        // Los campos del schema vienen en MAYÚSCULAS
         const name = product.NAME || product.name || "";
         const description = product.DESCRIPTION || product.description || "";
         const price = product.PRICE || product.price || 0;
