@@ -5,7 +5,7 @@ const searchInput = document.getElementById("searchInput");
 
 let allProducts = [];
 let currentFilter = "all";
-let currentSearch = "";
+let currentSearch = ""; // guarda en memoria el valor del input
 
 // Cargar productos desde la API
 async function loadProducts() {
