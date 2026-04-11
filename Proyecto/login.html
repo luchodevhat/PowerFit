@@ -90,9 +90,11 @@
 
   <script type="module" src="/src/main.js"></script>
   <script>
+    // =============================================
     // Mobile nav toggle
-    const navToggle = document.getElementById('navToggle');
-    const navMenu = document.getElementById('navMenu');
+    // =============================================
+    const navToggle = document.getElementById('navToggle2');
+    const navMenu = document.getElementById('navMenu2');
     if (navToggle) {
       navToggle.addEventListener('click', () => {
         navMenu.classList.toggle('active');
@@ -100,7 +102,9 @@
       });
     }
 
-    // Tab switching
+    // =============================================
+    // Tab switching (Login ↔ Signup)
+    // =============================================
     const tabs = document.querySelectorAll('.auth-tab');
     const loginForm = document.getElementById('loginForm');
     const signupForm = document.getElementById('signupForm');
@@ -125,21 +129,131 @@
       });
     });
 
-    // Form handling
-    document.getElementById('loginForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Inicio de sesión (conectar con backend)');
-    });
+    // =============================================
+    // Si ya está logueado, redirigir
+    // =============================================
+    (function checkExistingSession() {
+      const token = localStorage.getItem('pf_token');
+      const user = JSON.parse(localStorage.getItem('pf_user') || 'null');
+      if (token && user) {
+        if (user.role === 'ADMIN') {
+          window.location.href = 'admin.html';
+        } else {
+          window.location.href = 'index.html';
+        }
+      }
+    })();
 
-    document.getElementById('signupForm').addEventListener('submit', (e) => {
+    // =============================================
+    // LOGIN — POST /api/auth/login
+    // =============================================
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const password = document.getElementById('signupPassword').value;
-      const confirm = document.getElementById('signupPasswordConfirm').value;
-      if (password !== confirm) {
-        alert('Las contraseñas no coinciden');
+
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const submitBtn = e.target.querySelector('.btn-auth');
+
+      if (!email || !password) {
+        alert('Por favor ingresa tu email y contraseña.');
         return;
       }
-      alert('Cuenta creada (conectar con backend)');
+
+      // Deshabilitar botón mientras carga
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Iniciando sesión...';
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.error || 'Error al iniciar sesión.');
+          return;
+        }
+
+        // Guardar token y datos del usuario en localStorage
+        localStorage.setItem('pf_token', data.token);
+        localStorage.setItem('pf_user', JSON.stringify(data.user));
+
+        // Redirigir según rol
+        if (data.user.role === 'ADMIN') {
+          window.location.href = 'admin.html';
+        } else {
+          window.location.href = 'index.html';
+        }
+
+      } catch (error) {
+        console.error('Error de login:', error);
+        alert('Error de conexión. Verifica que el servidor esté corriendo.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Iniciar sesión';
+      }
+    });
+
+    // =============================================
+    // SIGNUP — POST /api/auth/signup
+    // =============================================
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('signupName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const password = document.getElementById('signupPassword').value;
+      const confirm = document.getElementById('signupPasswordConfirm').value;
+      const submitBtn = e.target.querySelector('.btn-auth');
+
+      if (!name || !email || !password) {
+        alert('Por favor completa todos los campos.');
+        return;
+      }
+
+      if (password !== confirm) {
+        alert('Las contraseñas no coinciden.');
+        return;
+      }
+
+      if (password.length < 6) {
+        alert('La contraseña debe tener al menos 6 caracteres.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creando cuenta...';
+
+      try {
+        const response = await fetch('/api/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.error || 'Error al crear la cuenta.');
+          return;
+        }
+
+        alert('¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.');
+
+        // Limpiar formulario y cambiar a tab de login
+        e.target.reset();
+        tabs[0].click();
+
+      } catch (error) {
+        console.error('Error de signup:', error);
+        alert('Error de conexión. Verifica que el servidor esté corriendo.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Crear cuenta';
+      }
     });
   </script>
 </body>

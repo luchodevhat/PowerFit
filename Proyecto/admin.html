@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel | PowerFit</title>
+  <meta name="description" content="Panel de administración de productos PowerFit" />
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+
+<body>
+  <div class="page-center">
+
+    <!-- Navbar (black) -->
+    <nav class="navbar navbar--black">
+      <a href="index.html" class="nav-brand">PowerFit</a>
+      <button class="nav-toggle" id="navToggle2" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-menu" id="navMenu2">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="Store.html">Store</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="login.html">Log in</a></li>
+      </ul>
+    </nav>
+
+    <main class="main-content admin-page">
+
+      <!-- ========================================
+           Admin Header con bienvenida y logout
+           ======================================== -->
+      <div class="admin-header" id="adminHeader">
+        <div>
+          <h1>Panel de Administración</h1>
+          <p id="adminWelcome">Bienvenido, Admin</p>
+        </div>
+        <button class="btn-logout" id="btnLogout">Cerrar sesión</button>
+      </div>
+
+      <!-- ========================================
+           Stats rápidos
+           ======================================== -->
+      <div class="admin-stats" id="adminStats">
+        <div class="stat-card">
+          <span class="stat-number" id="statTotal">-</span>
+          <span class="stat-label">Productos</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="statCategories">-</span>
+          <span class="stat-label">Categorías</span>
+        </div>
+      </div>
+
+      <!-- ========================================
+           Tabla de productos existentes
+           ======================================== -->
+      <section class="admin-section" id="productsSection">
+        <h2 class="admin-section-title">
+          <span class="icon">📦</span> Productos existentes
+        </h2>
+
+        <div class="admin-table-wrapper">
+          <table class="admin-table" id="productsTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Categoría</th>
+                <th>Stock</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody">
+              <!-- Se llena dinámicamente con JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Loading state -->
+        <div class="admin-loading" id="productsLoading">
+          <div class="spinner"></div>
+          <span>Cargando productos...</span>
+        </div>
+      </section>
+
+      <!-- ========================================
+           Formulario para agregar nuevo producto
+           ======================================== -->
+      <section class="admin-section">
+        <h2 class="admin-section-title">
+          <span class="icon">➕</span> Agregar nuevo producto
+        </h2>
+
+        <form class="admin-form" id="addProductForm" novalidate>
+          <div class="form-group">
+            <label for="prodName">Nombre del producto *</label>
+            <input type="text" id="prodName" name="name" required placeholder="Ej: Camiseta Gym Pro">
+          </div>
+
+          <div class="form-group">
+            <label for="prodSlug">Slug (identificador único) *</label>
+            <input type="text" id="prodSlug" name="slug" required placeholder="Ej: camiseta-gym-pro">
+          </div>
+
+          <div class="form-group">
+            <label for="prodPrice">Precio ($) *</label>
+            <input type="number" id="prodPrice" name="price" required min="0" step="0.01" placeholder="45.00">
+          </div>
+
+          <div class="form-group">
+            <label for="prodStock">Stock</label>
+            <input type="number" id="prodStock" name="stock" min="0" value="0" placeholder="10">
+          </div>
+
+          <div class="form-group">
+            <label for="prodCategory">Categoría *</label>
+            <select id="prodCategory" name="category_id" required>
+              <option value="">Seleccionar categoría</option>
+              <option value="1">Hombre</option>
+              <option value="2">Mujer</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="prodImage">URL de imagen</label>
+            <input type="text" id="prodImage" name="image_url" placeholder="/img/producto.jpg">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="prodDesc">Descripción</label>
+            <textarea id="prodDesc" name="description" placeholder="Descripción del producto..."></textarea>
+          </div>
+
+          <button type="submit" class="btn-add-product" id="btnAddProduct">
+            Agregar producto
+          </button>
+        </form>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h2>PowerFit</h2>
+        <p>Rendimiento, estilo y actitud activa.</p>
+      </div>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="Store.html">Store</a>
+        <a href="about.html">About</a>
+        <a href="login.html">Log in</a>
+      </div>
+    </div>
+    <p class="footer-copy">&copy; 2026 PowerFit. Todos los derechos reservados.</p>
+  </footer>
+
+  <!-- Toast container para notificaciones -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    // =============================================
+    // CONSTANTES Y ESTADO
+    // =============================================
+    const API_BASE = '/api';
+    let token = localStorage.getItem('pf_token');
+    let currentUser = JSON.parse(localStorage.getItem('pf_user') || 'null');
+    let products = []; // lista de productos cargados
+
+    // =============================================
+    // PROTECCIÓN: Verificar autenticación y rol admin
+    // Solo usuarios con rol ADMIN pueden acceder
+    // =============================================
+    (function checkAdminAccess() {
+      if (!token || !currentUser) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      if (currentUser.role !== 'ADMIN') {
+        alert('Acceso denegado. Solo administradores pueden acceder a esta página.');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // Mostrar nombre del admin en el header
+      document.getElementById('adminWelcome').textContent =
+        `Bienvenido, ${currentUser.name || currentUser.email}`;
+    })();
+
+    // =============================================
+    // MOBILE NAV TOGGLE
+    // =============================================
+    document.getElementById('navToggle2').addEventListener('click', () => {
+      document.getElementById('navMenu2').classList.toggle('active');
+      document.getElementById('navToggle2').classList.toggle('active');
+    });
+
+    // =============================================
+    // CERRAR SESIÓN
+    // =============================================
+    document.getElementById('btnLogout').addEventListener('click', () => {
+      localStorage.removeItem('pf_token');
+      localStorage.removeItem('pf_user');
+      window.location.href = 'login.html';
+    });
+
+    // =============================================
+    // SISTEMA DE TOASTS (Notificaciones)
+    // =============================================
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+
+      const icon = type === 'success' ? '✅' : '❌';
+      toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+
+      container.appendChild(toast);
+
+      // Auto-remover después de 3.5 segundos
+      setTimeout(() => {
+        toast.classList.add('toast-out');
+        setTimeout(() => toast.remove(), 350);
+      }, 3500);
+    }
+
+    // =============================================
+    // HELPER: Headers con authorization
+    // =============================================
+    function authHeaders() {
+      return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      };
+    }
+
+    // =============================================
+    // CARGAR PRODUCTOS DESDE API
+    // GET /api/products
+    // =============================================
+    async function loadProducts() {
+      const loading = document.getElementById('productsLoading');
+      const tableBody = document.getElementById('productsTableBody');
+
+      loading.style.display = 'flex';
+      tableBody.innerHTML = '';
+
+      try {
+        const response = await fetch(`${API_BASE}/products`);
+
+        if (!response.ok) {
+          throw new Error('Error al obtener productos');
+        }
+
+        products = await response.json();
+        renderProductsTable();
+        updateStats();
+
+      } catch (error) {
+        console.error('Error cargando productos:', error);
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align:center; padding: 2rem; color: #fca5a5;">
+              Error al cargar productos. Verifica la conexión con el servidor.
+            </td>
+          </tr>
+        `;
+      } finally {
+        loading.style.display = 'none';
+      }
+    }
+
+    // =============================================
+    // RENDERIZAR TABLA DE PRODUCTOS
+    // =============================================
+    function renderProductsTable() {
+      const tableBody = document.getElementById('productsTableBody');
+      tableBody.innerHTML = '';
+
+      if (products.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="7">
+              <div class="admin-empty">
+                <div class="empty-icon">📭</div>
+                <p>No hay productos registrados.</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      products.forEach(product => {
+        const row = document.createElement('tr');
+        row.setAttribute('data-id', product.PRODUCT_ID);
+
+        row.innerHTML = `
+          <td>${product.PRODUCT_ID}</td>
+          <td>
+            ${product.IMAGE_URL
+              ? `<img src="${product.IMAGE_URL}" alt="${product.NAME}" class="product-img-thumb">`
+              : '<span style="color:rgba(255,255,255,0.3)">—</span>'
+            }
+          </td>
+          <td class="cell-name">${product.NAME}</td>
+          <td class="cell-price">$ ${Number(product.PRICE).toFixed(2)}</td>
+          <td>${product.CATEGORY || '—'}</td>
+          <td>${product.STOCK != null ? product.STOCK : '—'}</td>
+          <td>
+            <button class="btn-edit" onclick="startEdit(${product.PRODUCT_ID})">Editar</button>
+          </td>
+        `;
+
+        tableBody.appendChild(row);
+      });
+    }
+
+    // =============================================
+    // ACTUALIZAR ESTADÍSTICAS
+    // =============================================
+    function updateStats() {
+      document.getElementById('statTotal').textContent = products.length;
+
+      // Contar categorías únicas
+      const categories = new Set(products.map(p => p.CATEGORY).filter(Boolean));
+      document.getElementById('statCategories').textContent = categories.size;
+    }
+
+    // =============================================
+    // EDITAR PRODUCTO (inline en tabla)
+    // Reemplaza las celdas de nombre y precio con inputs
+    // =============================================
+    function startEdit(productId) {
+      const row = document.querySelector(`tr[data-id="${productId}"]`);
+      if (!row) return;
+
+      const product = products.find(p => p.PRODUCT_ID === productId);
+      if (!product) return;
+
+      const cellName = row.querySelector('.cell-name');
+      const cellPrice = row.querySelector('.cell-price');
+      const cellActions = row.querySelector('td:last-child');
+
+      // Guardar valores originales
+      const originalName = product.NAME;
+      const originalPrice = product.PRICE;
+
+      // Reemplazar con inputs
+      cellName.innerHTML = `<input type="text" class="edit-input" id="editName_${productId}" value="${originalName}">`;
+      cellPrice.innerHTML = `<input type="number" class="edit-input" id="editPrice_${productId}" value="${originalPrice}" min="0" step="0.01">`;
+
+      // Cambiar botones a Guardar/Cancelar
+      cellActions.innerHTML = `
+        <button class="btn-save" onclick="saveEdit(${productId})">Guardar</button>
+        <button class="btn-cancel" onclick="cancelEdit(${productId}, '${originalName.replace(/'/g, "\\'")}', ${originalPrice})">Cancelar</button>
+      `;
+
+      // Focus en el input de nombre
+      document.getElementById(`editName_${productId}`).focus();
+    }
+
+    // =============================================
+    // CANCELAR EDICIÓN — Restaura valores originales
+    // =============================================
+    function cancelEdit(productId, originalName, originalPrice) {
+      const row = document.querySelector(`tr[data-id="${productId}"]`);
+      if (!row) return;
+
+      const cellName = row.querySelector('.cell-name');
+      const cellPrice = row.querySelector('.cell-price');
+      const cellActions = row.querySelector('td:last-child');
+
+      cellName.textContent = originalName;
+      cellPrice.textContent = `$ ${Number(originalPrice).toFixed(2)}`;
+      cellActions.innerHTML = `<button class="btn-edit" onclick="startEdit(${productId})">Editar</button>`;
+    }
+
+    // =============================================
+    // GUARDAR EDICIÓN — PUT /api/products/:id
+    // =============================================
+    async function saveEdit(productId) {
+      const nameInput = document.getElementById(`editName_${productId}`);
+      const priceInput = document.getElementById(`editPrice_${productId}`);
+
+      const newName = nameInput.value.trim();
+      const newPrice = parseFloat(priceInput.value);
+
+      // Validación
+      if (!newName) {
+        showToast('El nombre no puede estar vacío.', 'error');
+        nameInput.focus();
+        return;
+      }
+
+      if (isNaN(newPrice) || newPrice < 0) {
+        showToast('El precio debe ser un número válido.', 'error');
+        priceInput.focus();
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/products/${productId}`, {
+          method: 'PUT',
+          headers: authHeaders(),
+          body: JSON.stringify({ name: newName, price: newPrice })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showToast(data.error || 'Error al actualizar el producto.', 'error');
+          return;
+        }
+
+        showToast('Producto actualizado correctamente.');
+
+        // Actualizar en memoria y re-renderizar
+        const productIndex = products.findIndex(p => p.PRODUCT_ID === productId);
+        if (productIndex !== -1) {
+          products[productIndex].NAME = newName;
+          products[productIndex].PRICE = newPrice;
+        }
+        renderProductsTable();
+
+      } catch (error) {
+        console.error('Error actualizando producto:', error);
+        showToast('Error de conexión al actualizar.', 'error');
+      }
+    }
+
+    // =============================================
+    // AUTO-GENERAR SLUG desde el nombre
+    // =============================================
+    document.getElementById('prodName').addEventListener('input', (e) => {
+      const slugInput = document.getElementById('prodSlug');
+      // Solo auto-generar si el slug está vacío o no ha sido editado manualmente
+      if (!slugInput.dataset.manual) {
+        slugInput.value = e.target.value
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9\s-]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/-+/g, '-');
+      }
+    });
+
+    // Marcar slug como editado manualmente si el usuario lo modifica
+    document.getElementById('prodSlug').addEventListener('input', () => {
+      document.getElementById('prodSlug').dataset.manual = 'true';
+    });
+
+    // =============================================
+    // AGREGAR PRODUCTO — POST /api/products
+    // =============================================
+    document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const form = e.target;
+      const submitBtn = document.getElementById('btnAddProduct');
+
+      // Obtener valores del formulario
+      const name = document.getElementById('prodName').value.trim();
+      const slug = document.getElementById('prodSlug').value.trim();
+      const price = document.getElementById('prodPrice').value;
+      const stock = document.getElementById('prodStock').value;
+      const category_id = document.getElementById('prodCategory').value;
+      const image_url = document.getElementById('prodImage').value.trim();
+      const description = document.getElementById('prodDesc').value.trim();
+
+      // Validación frontend
+      if (!name) {
+        showToast('El nombre del producto es requerido.', 'error');
+        return;
+      }
+      if (!slug) {
+        showToast('El slug es requerido.', 'error');
+        return;
+      }
+      if (!price || parseFloat(price) <= 0) {
+        showToast('El precio debe ser mayor a 0.', 'error');
+        return;
+      }
+      if (!category_id) {
+        showToast('Selecciona una categoría.', 'error');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Guardando...';
+
+      try {
+        const response = await fetch(`${API_BASE}/products`, {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({
+            name,
+            slug,
+            description,
+            price: parseFloat(price),
+            stock: parseInt(stock) || 0,
+            category_id: parseInt(category_id),
+            image_url: image_url || null
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showToast(data.error || 'Error al crear el producto.', 'error');
+          return;
+        }
+
+        showToast('¡Producto creado exitosamente!');
+
+        // Limpiar formulario
+        form.reset();
+        document.getElementById('prodSlug').dataset.manual = '';
+
+        // Recargar tabla de productos
+        await loadProducts();
+
+      } catch (error) {
+        console.error('Error creando producto:', error);
+        showToast('Error de conexión al crear producto.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Agregar producto';
+      }
+    });
+
+    // =============================================
+    // INICIALIZACIÓN
+    // =============================================
+    loadProducts();
+  </script>
+</body>
+
+</html>

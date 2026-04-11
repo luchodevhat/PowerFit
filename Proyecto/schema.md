@@ -50,6 +50,12 @@ VALUES ('Hombre','hombre');
 INSERT INTO CATEGORIES (NAME, SLUG)
 VALUES ('Mujer','mujer');
 
+
+
+
+
+// scripts extra para insertar productos y crear el usuario
+
 INSERT INTO PRODUCTS 
 (NAME, SLUG, DESCRIPTION, PRICE, CATEGORY_ID, IMAGE_URL)
 VALUES
@@ -67,7 +73,7 @@ INSERT INTO PRODUCTS
 VALUES
 (
 'T-shirt',
-'T-shirt gym', esto es idenfiticador unico
+'T-shirt gym', // esto es idenfiticador unico
 'T-shirt de alto rendimiento para entrenamiento',
 45,
 10,
@@ -75,6 +81,11 @@ VALUES
 '/img/ropa2.jpg',
 1
 );
+COMMIT;
+
+UPDATE PRODUCTS
+SET IMAGE_URL = '/img/Ropa1.jpg'  // url lo puse mal en el primer script
+WHERE NAME = 'Buzo CUTLINE';
 COMMIT;
 
 
